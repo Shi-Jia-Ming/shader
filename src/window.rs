@@ -19,7 +19,7 @@ pub fn create_window() -> (EventLoop<()>, glutin::ContextWrapper<glutin::Possibl
         gl::load_with(|ptr| windowed_context.get_proc_address(ptr) as *const _);
 
         // 设置全屏模式
-        windowed_context.window().set_fullscreen(Some(glutin::window::Fullscreen::Borderless(None)));
+        // windowed_context.window().set_fullscreen(Some(glutin::window::Fullscreen::Borderless(None)));
 
         windowed_context
     };

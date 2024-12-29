@@ -28,9 +28,6 @@ fn main() {
         // 初始化顶点数据
         let vao = unsafe { buffer::create_line() };
 
-        // 创建帧缓冲对象
-        let (frame_buffer, texture) = unsafe { create_frame_buffer() };
-
         match event {
             glutin::event::Event::WindowEvent { event, .. } => match event {
                 // 按 Esc 键退出
@@ -47,19 +44,14 @@ fn main() {
             },
             glutin::event::Event::MainEventsCleared => {
                 unsafe { 
-                    gl::BindFramebuffer(gl::FRAMEBUFFER, frame_buffer);
 
-                    gl::DrawArrays(gl::TRIANGLE_FAN, 0, 3);
-
-                    // 渲染实际对象到默认帧缓冲区
-                    gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
-                    gl::ClearColor(0.2, 0.3, 0.3, 1.0);
+                    gl::BindVertexArray(vao);
+                    gl::ClearColor(0.7, 0.7, 0.1, 0.0);
                     gl::Clear(gl::COLOR_BUFFER_BIT);
-                    gl::BindTexture(gl::TEXTURE_2D, texture);
 
-                    draw_event(vao, shader_program);
-
-
+                    gl::UseProgram(shader_program);
+                
+                    gl::DrawArrays(gl::TRIANGLE_FAN, 0, 4);
                 }
 
                 windowed_context.swap_buffers().unwrap();

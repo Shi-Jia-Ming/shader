@@ -19,6 +19,7 @@ pub unsafe  fn create_frame_buffer() -> (u32, u32) {
         for x in 0..width {
             let offset = (y * width + x) * 3;
             let color = if (x / 100 + y / 100) % 2 == 0 { 255 } else { 0 };
+            let color = 255;
             texture_data[offset] = color;
             texture_data[offset + 1] = color;
             texture_data[offset + 2] = color;
@@ -58,10 +59,10 @@ pub unsafe  fn create_frame_buffer() -> (u32, u32) {
 pub unsafe fn create_line() -> u32 {
     let vertices: [f32; 24] = [
         // positions       // colors
-        0.5,  0.5, 0.0,   1.0, 0.0, 0.0,  // top right
-        0.5, -0.5, 0.0,   0.0, 1.0, 0.0,  // bottom right
-       -0.5, -0.5, 0.0,   0.0, 0.0, 1.0,  // bottom left
-       -0.5,  0.5, 0.0,   1.0, 1.0, 0.0   // top left 
+        0.5,  0.5, 0.0,   0.0, 0.0, 0.0,  // top right
+        0.5, -0.5, 0.0,   0.0, 0.0, 0.0,  // bottom right
+       -0.5, -0.5, 0.0,   0.0, 0.0, 0.0,  // bottom left
+       -0.5,  0.5, 0.0,   0.0, 0.0, 0.0   // top left 
     ];
 
     let indices: [u32; 6] = [
@@ -134,4 +135,40 @@ pub unsafe fn create_line() -> u32 {
     }
 
     vao
+}
+
+pub unsafe fn create_triangle() {
+    let vertices: [f32; 9] = [
+        -0.5, -0.5, 0.0,
+         0.5, -0.5, 0.0,
+         0.0,  0.5, 0.0
+    ];
+
+    let mut vao: u32 = 0;
+    let mut vbo: u32 = 0;
+
+    gl::GenVertexArrays(1, &mut vao);
+    gl::GenBuffers(1, &mut vbo);
+
+    gl::BindVertexArray(vao);
+    gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
+    gl::BufferData(
+        gl::ARRAY_BUFFER,
+        (vertices.len() * std::mem::size_of::<f32>()) as isize,
+        vertices.as_ptr() as *const _,
+        gl::STATIC_DRAW,
+    );
+
+    gl::VertexAttribPointer(
+        0,
+        3,
+        gl::FLOAT,
+        gl::FALSE,
+        3 * std::mem::size_of::<f32>() as i32,
+        ptr::null(),
+    );
+    gl::EnableVertexAttribArray(0);
+
+    gl::BindBuffer(gl::ARRAY_BUFFER, 0);
+    gl::BindVertexArray(0);
 }
